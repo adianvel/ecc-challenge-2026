@@ -390,7 +390,7 @@ kbd { display:inline-block; font:600 12px/1.3 'Geist',sans-serif; padding:3px 6p
 .participant-shell .stick-ring { border-color:#f26f2180; }
 .participant-shell .stick-knob { border-color:#ffab73; background:#f26f21; }
 .participant-shell .stick-caption { color:#fff; }
-@media (pointer:fine) { .participant-shell .virtual-stick { display:none; } }
+@media (min-width:901px) and (hover:hover) and (pointer:fine) { .participant-shell .virtual-stick { display:none; } }
 .participant-shell .orientation-note { display:none; max-width:none; width:100%; text-align:left; border:0; font-size:15px; position:absolute; inset:0; z-index:10; padding:36px 28px; background:#f4f5f8; color:#0b2d54; align-content:center; }
 .participant-shell .orientation-note strong { font-size:24px; line-height:1.3; }
 .participant-shell .orientation-note p { color:#3b4f6d; font-size:15px; line-height:1.7; }
