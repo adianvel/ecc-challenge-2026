@@ -20,10 +20,8 @@ export function GameWorld({ stage, paused, quizDefeats, victoryEvent, onOpenQuiz
   const mountRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<{ interact: () => void; celebrateQuiz: (quizId: string) => void } | null>(null);
   const celebratedSerial = useRef(0);
-  const [portrait, setPortrait] = useState(() => matchMedia('(pointer:coarse) and (orientation:portrait)').matches);
-  useEffect(() => { const media=matchMedia('(pointer:coarse) and (orientation:portrait)');const change=()=>setPortrait(media.matches);media.addEventListener('change',change);return()=>media.removeEventListener('change',change); }, []);
   const pausedRef = useRef(paused);
-  pausedRef.current = paused || portrait;
+  pausedRef.current = paused;
   const defeatsRef = useRef(quizDefeats);
   defeatsRef.current = quizDefeats;
   const movementRef = useRef<Movement>({ x: 0, y: 0 });
@@ -140,9 +138,9 @@ export function GameWorld({ stage, paused, quizDefeats, victoryEvent, onOpenQuiz
       window.removeEventListener('keyup', onKeyUp);
       window.removeEventListener('blur', clearMovement);
     };
-  }, [paused, portrait, onPause, endMovement]);
+  }, [paused, onPause, endMovement]);
 
-  useEffect(() => { if (paused || portrait) endMovement(); }, [paused, portrait, endMovement]);
+  useEffect(() => { if (paused) endMovement(); }, [paused, endMovement]);
 
   const startMovement = (event: React.PointerEvent<HTMLDivElement>) => {
     if (pausedRef.current || pointerIdRef.current !== null) return;
@@ -177,7 +175,6 @@ export function GameWorld({ stage, paused, quizDefeats, victoryEvent, onOpenQuiz
       )}
       <button className="game-pause-button" type="button" aria-label="Jeda permainan" onClick={onPause}><Pause size={22} weight="bold" /></button>
 
-      <div className="orientation-note" role="status"><strong>Putar ponsel ke posisi lanskap</strong><p>Peta dan kontrol gerak membutuhkan layar yang lebih lebar. Buka Jeda untuk kembali ke peta.</p></div>
       <div
         className="virtual-stick"
         role="group"
