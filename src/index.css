@@ -378,7 +378,6 @@ canvas {
 .interact-button { position:absolute; z-index:4; bottom:38px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:9px; padding:10px 15px; border:1px solid #f3d27a; color:#fbf0d0; background:#0b1d2eeF; box-shadow:0 7px 20px #0008; cursor:pointer; font:650 11px 'Geist',sans-serif; }
 .interact-button:hover { background:#193046; }
 .interact-key { min-width:22px; padding:3px 5px; color:#14202a; background:#e9b95b; text-align:center; font:700 10px 'Geist Mono',monospace; }
-.orientation-note { display:none; }
 
 .journey-scrim { position:fixed; z-index:40; inset:0; display:grid; place-items:center; overflow:auto; padding:20px; background:#020810bf; backdrop-filter:blur(5px); }
 .journey-dialog { width:min(760px,100%); max-height:min(92vh,900px); overflow:auto; padding:23px; border:1px solid #927543; background:#0a1927; box-shadow:0 22px 70px #000b,inset 0 0 0 4px #0c1c2a; }
@@ -504,7 +503,6 @@ canvas {
   .stick-ring { width:65px; height:65px; }
   .stick-knob { width:37px; height:37px; }
   .interact-button { bottom:36px; left:auto; right:13px; transform:none; max-width:53%; padding:9px; font-size:9px; }
-  .orientation-note { position:absolute; z-index:5; top:48px; right:8px; display:block; max-width:145px; padding:5px 7px; color:#e1e7e9; background:#081522c9; font-size:8px; text-align:right; }
   .journey-scrim { padding:8px; }
   .journey-dialog { max-height:96vh; padding:16px; }
   .dialog-heading h2 { font-size:20px; }
@@ -514,9 +512,6 @@ canvas {
   .quest-board-row { grid-template-columns:46px minmax(0,1fr); gap:8px; }
   .quest-board-row .button { grid-column:2; justify-self:start; }
   .quest-board-row strong { font-size:10px; }
-}
-@media (orientation:portrait) and (max-width:680px) {
-  .orientation-note { color:#ffe5a2; border:1px solid #b6934d; }
 }
 @media (prefers-reduced-motion:reduce) {
   .participant-shell *, .participant-shell *::before, .participant-shell *::after { scroll-behavior:auto !important; transition-duration:.01ms !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; }
