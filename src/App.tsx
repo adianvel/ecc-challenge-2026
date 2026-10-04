@@ -6,6 +6,7 @@ import { authErrorMessage, useAuth } from './lib/auth';
 import { supabase } from './lib/supabase';
 import { navigate, useLocation } from './lib/navigation';
 import { HERO_ROLES, type HeroRoleConfig } from './data/heroCharacters';
+import { RpgHeroSection } from './components/landing/RpgHeroSection';
 
 const ProgramApp = lazy(() => import('./ProgramApp'));
 
@@ -63,24 +64,8 @@ export default function App() {
       </nav>
     </header>
     <main id="journey">
-      {/* Screen 1: Hero */}
-      <section className="landing-screen landing-hero-screen" id="hero">
-        <div className="landing-hero">
-          <div className="hero-copy">
-            <p className="program-name">Program SIAP IMPACT 2026</p>
-            <h1>Perjalanan belajar yang bisa kamu jelajahi.</h1>
-            <p className="hero-description">Temukan masalah, bangun solusi, lalu ceritakan dampaknya. Future Quest membawa perjalanan bootcamp-mu ke dalam dunia yang bisa kamu mainkan.</p>
-            <div className="entry-actions">
-              <a className="entry-button entry-primary" href="/demo">Coba demo <ArrowRight size={18} /></a>
-              <a className="entry-button entry-secondary" href={auth.session ? "/play" : "/login"}>{auth.session ? "Lanjutkan perjalanan" : "Login peserta"}</a>
-            </div>
-            <p className="entry-caption">Demo terbuka untuk semua. Akun peserta melalui undangan ECC.</p>
-          </div>
-          <figure className="hero-landscape">
-            <img src="/assets/landing/ecc_future_quest_keyart.jpg" width="1376" height="768" alt="ECC Future Quest Key Visual - The Journey of Impact" />
-          </figure>
-        </div>
-      </section>
+      {/* Screen 1: Hero - RPG Title Screen with Parallax, Drifting Clouds & Organizers */}
+      <RpgHeroSection isLoggedIn={!!auth.session} />
 
       {/* Screen 2: Tracks */}
       <section className="landing-screen landing-stages landing-tracks-screen" id="tracks" aria-labelledby="track-heading">
