@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type Phaser from 'phaser';
-import { Pause, Trophy } from '@phosphor-icons/react';
+import { ArrowRight, Pause, Trophy } from '@phosphor-icons/react';
 import type { ParticipantStage } from '../data/participantStages';
 import { movementInput } from '../game/terrain';
-import type { StageEncounter } from '../game/arena-scene';
+import type { StageEncounter, TargetIndicator } from '../game/arena-scene';
 
 type Movement = { x: number; y: number };
 
@@ -29,6 +29,7 @@ export function GameWorld({ stage, paused, quizDefeats, victoryEvent, onOpenQuiz
   const pointerIdRef = useRef<number | null>(null);
   const [stickPosition, setStickPosition] = useState<Movement>({ x: 0, y: 0 });
   const [nearbyEncounter, setNearbyEncounter] = useState<StageEncounter | null>(null);
+  const [targetIndicator, setTargetIndicator] = useState<TargetIndicator | null>(null);
   const [gameReady, setGameReady] = useState(false);
 
   const updateMovement = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
@@ -54,6 +55,7 @@ export function GameWorld({ stage, paused, quizDefeats, victoryEvent, onOpenQuiz
   useEffect(() => {
     let disposed = false;
     let game: Phaser.Game | null = null;
+    setTargetIndicator(null);
 
     async function createGame() {
       const [{ default: PhaserModule }, { ArenaScene: Scene }] = await Promise.all([
@@ -67,6 +69,7 @@ export function GameWorld({ stage, paused, quizDefeats, victoryEvent, onOpenQuiz
         () => defeatsRef.current,
         setNearbyEncounter,
         encounter => { if (!pausedRef.current) onOpenQuiz(encounter.id); },
+        setTargetIndicator,
         () => setGameReady(true),
         heroSpritesheetUrl
       );
@@ -161,6 +164,12 @@ export function GameWorld({ stage, paused, quizDefeats, victoryEvent, onOpenQuiz
   return (
     <section className="game-viewport" tabIndex={0} aria-label={`${stage.phase} ${stage.name} scene`}>
       <div className="phaser-mount" ref={mountRef} aria-label={`${stage.name} game map`} />
+      {!paused && targetIndicator && (
+        <div className="monster-direction" style={{ left: targetIndicator.x, top: targetIndicator.y }} aria-hidden="true">
+          <ArrowRight size={20} weight="bold" style={{ transform: `rotate(${targetIndicator.angle}deg)` }} />
+          <span>{targetIndicator.label}</span>
+        </div>
+      )}
       {!gameReady && <div className="loading-note" role="status">Memuat peta {stage.phase}…</div>}
       {onOpenLeaderboard && (
         <button

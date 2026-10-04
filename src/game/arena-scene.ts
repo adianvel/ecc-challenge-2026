@@ -8,6 +8,7 @@ import { STAGE_MONSTERS, monsterArtPath, type StageMonster } from '../data/stage
 import { getHeroSprite, getSavedHeroGender } from '../data/heroCharacters';
 
 export type StageEncounter = { id: string; name: string; locked: boolean };
+export type TargetIndicator = { x: number; y: number; angle: number; label: string };
 type Movement = { x: number; y: number };
 type Facing = 'down' | 'right' | 'up' | 'left';
 const MAP_SIZE = 640;
@@ -24,6 +25,8 @@ export class ArenaScene extends Phaser.Scene {
   private isKnockedBack = false;
   private lastKnockbackTime = 0;
   private facing: Facing = 'down';
+  private indicatorSignature = '';
+  private indicatorTime = 0;
 
   constructor(
     private readonly stage: ParticipantStage,
@@ -31,6 +34,7 @@ export class ArenaScene extends Phaser.Scene {
     private readonly readDefeats: () => readonly string[],
     private readonly onNearbyEncounter: (encounter: StageEncounter | null) => void,
     private readonly onEncounterInteract: (encounter: StageEncounter) => void,
+    private readonly onTargetIndicator: (indicator: TargetIndicator | null) => void,
     private readonly onReady: () => void,
     private readonly heroSpritesheetUrl?: string,
   ) {
@@ -73,6 +77,7 @@ export class ArenaScene extends Phaser.Scene {
     if (!this.player) return;
 
     const defeats = this.readDefeats();
+    this.updateTargetIndicator(_time, defeats);
     const bossUnlocked = STAGE_MONSTERS[this.stage.ordinal].slice(0, 2).every(monster => defeats.includes(monster.quizId));
 
     // Check boss barrier knockback trigger if player approaches locked boss
@@ -124,6 +129,35 @@ export class ArenaScene extends Phaser.Scene {
           this.triggerBossBarrierRepel(bossEntry.monster);
         }
       }
+    }
+  }
+
+  private updateTargetIndicator(time: number, defeats: readonly string[]) {
+    if (time - this.indicatorTime < 100) return;
+    this.indicatorTime = time;
+    const monsters = STAGE_MONSTERS[this.stage.ordinal];
+    const target = monsters.find(monster => !defeats.includes(monster.quizId));
+    const width = this.scale.width, height = this.scale.height;
+    const camera = this.cameras.main;
+    const screenX = target ? (target.x - camera.worldView.x) * camera.zoom : 0;
+    const screenY = target ? (target.y - camera.worldView.y) * camera.zoom : 0;
+    let indicator: TargetIndicator | null = null;
+    if (target && (screenX < 48 || screenX > width - 48 || screenY < 72 || screenY > height - 100)) {
+      const dx = screenX - width / 2, dy = screenY - height / 2;
+      const horizontal = dx > 0 ? (width / 2 - 48) / dx : (-width / 2 + 48) / dx;
+      const vertical = dy > 0 ? (height / 2 - 100) / dy : (-height / 2 + 72) / dy;
+      const distance = Math.min(horizontal || Infinity, vertical || Infinity);
+      indicator = {
+        x: Math.round(width / 2 + dx * distance),
+        y: Math.round(height / 2 + dy * distance),
+        angle: Math.atan2(dy, dx) * 180 / Math.PI,
+        label: target.boss ? 'Boss' : `Monster ${monsters.indexOf(target) + 1}`,
+      };
+    }
+    const signature = indicator ? `${indicator.label}:${Math.round(indicator.x / 4)}:${Math.round(indicator.y / 4)}:${Math.round(indicator.angle / 5)}` : '';
+    if (signature !== this.indicatorSignature) {
+      this.indicatorSignature = signature;
+      this.onTargetIndicator(indicator);
     }
   }
 
