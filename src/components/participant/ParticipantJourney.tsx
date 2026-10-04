@@ -268,7 +268,7 @@ function Onboarding({ currentPath, onContinue }: { currentPath: PathCode; onCont
         <div className="onboarding-copy"><span className="eyebrow">Future Base · sebelum bootcamp</span>
           <h1>Siapkan perjalananmu.</h1>
           <p>Pilih fokus belajar dan tuliskan tujuanmu. Setelah ini, kamu bisa menjelajahi empat stage.</p>
-          <div className="onboarding-sequence"><span className="sequence-active">01 Future Base</span><i /><span>02 L1 Discover</span><i /><span>03 L2 Build</span><i /><span>04 L3 Pitch</span></div>
+          <div className="onboarding-sequence"><span className="sequence-active">01 Future Base</span><i /><span>02 Stage 1 Discover</span><i /><span>03 Stage 2 Build</span><i /><span>04 Stage 3 Pitch</span></div>
         </div>
         
       </div>
@@ -477,9 +477,9 @@ function AccessControls({ access, onUpdateGate }: { access: DemoAccessState; onU
     <p>Ubah nilai simulasi untuk melihat gate hasil dan jadwal. Ini tidak terhubung ke keputusan ECC.</p>
     {([2, 3] as const).map(ordinal => {
       const gate = access[ordinal === 2 ? 'stage2' : 'stage3'];
-      return <fieldset className="gate-row" key={ordinal}><legend>L{ordinal} · {ordinal === 2 ? 'Hasil L1' : 'Hasil L2'}</legend>
+      return <fieldset className="gate-row" key={ordinal}><legend>Stage {ordinal} · {ordinal === 2 ? 'Hasil Stage 1' : 'Hasil Stage 2'}</legend>
         <label className="gate-check"><input type="checkbox" checked={gate.resultPublished} onChange={event => onUpdateGate(ordinal, { resultPublished: event.target.checked })} /><span>Hasil dipublikasikan</span></label>
-        <label className="gate-select"><span>Keputusan</span><select aria-label={`Keputusan akses L${ordinal}`} value={gate.decision} onChange={event => onUpdateGate(ordinal, { decision: event.target.value as StageGate['decision'] })}><option value="advance">Maju</option><option value="not-advanced">Tidak maju</option></select></label>
+        <label className="gate-select"><span>Keputusan</span><select aria-label={`Keputusan akses Stage ${ordinal}`} value={gate.decision} onChange={event => onUpdateGate(ordinal, { decision: event.target.value as StageGate['decision'] })}><option value="advance">Maju</option><option value="not-advanced">Tidak maju</option></select></label>
         <label className="gate-check"><input type="checkbox" checked={gate.scheduledOpen} onChange={event => onUpdateGate(ordinal, { scheduledOpen: event.target.checked })} /><span>Jadwal pembukaan tiba</span></label>
       </fieldset>;
     })}

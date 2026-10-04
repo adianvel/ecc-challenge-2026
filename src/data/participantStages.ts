@@ -18,7 +18,7 @@ export const PARTICIPANT_STAGES: ParticipantStage[] = [
   {
     ordinal: 1,
     name: 'Discover',
-    phase: 'L1',
+    phase: 'Stage 1',
     description: 'Temukan akar masalah dari pengalaman nyata.',
     mapPath: '/assets/dungeon/map_stage3_interior.png',
     mapScale: 2,
@@ -29,7 +29,7 @@ export const PARTICIPANT_STAGES: ParticipantStage[] = [
   {
     ordinal: 2,
     name: 'Build',
-    phase: 'L2',
+    phase: 'Stage 2',
     description: 'Bangun dan uji prototipe dari temuan lapangan.',
     mapPath: '/assets/dungeon/map_stage2_castle.png',
     mapScale: 2,
@@ -40,7 +40,7 @@ export const PARTICIPANT_STAGES: ParticipantStage[] = [
   {
     ordinal: 3,
     name: 'Pitch',
-    phase: 'L3',
+    phase: 'Stage 3',
     description: 'Uji, sempurnakan, dan siapkan presentasi final.',
     mapPath: '/assets/dungeon/map_stage3_ice.png',
     mapScale: 2,
@@ -51,7 +51,7 @@ export const PARTICIPANT_STAGES: ParticipantStage[] = [
   {
     ordinal: 4,
     name: 'Impact',
-    phase: 'L4',
+    phase: 'Stage 4',
     description: 'Rayakan dampak dan kelulusan perjalananmu di kayangan.',
     mapPath: '/assets/dungeon/map_stage4_celestial_crisp.png',
     mapScale: 2,

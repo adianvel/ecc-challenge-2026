@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { ArrowRight, ArrowLeft, MapTrifold, Hammer, PresentationChart, MapPin, EnvelopeSimple, ShieldCheck, Sparkle, Lightning, Trophy } from '@phosphor-icons/react';
+import ScrollStack, { ScrollStackItem } from './ScrollStack';
 import { AccountPage, type AccountMode } from './components/AccountPage';
 import { authErrorMessage, useAuth } from './lib/auth';
 import { supabase } from './lib/supabase';
@@ -127,12 +128,79 @@ export default function App() {
             <h2 id="stage-heading">Empat stage. Satu perjalanan milikmu.</h2>
             <p>Bergerak di peta, temukan papan misi, dan kerjakan tantangan sesuai jalur programmu. Kembali ke peta ekspedisi kapan pun untuk berpindah stage.</p>
           </div>
-          <ol className="landing-route stages-4">
-            <li><MapTrifold size={28} weight="duotone" /><div><span className="pixel-label">L1 · Discover</span><h3>Mulai dari rasa ingin tahu.</h3><p>Amati pengalaman nyata dan temukan masalah yang layak diselesaikan.</p></div></li>
-            <li><Hammer size={28} weight="duotone" /><div><span className="pixel-label">L2 · Build</span><h3>Wujudkan idemu.</h3><p>Bangun prototipe, uji dengan pengguna, dan pelajari hasilnya.</p></div></li>
-            <li><PresentationChart size={28} weight="duotone" /><div><span className="pixel-label">L3 · Pitch</span><h3>Ceritakan hasil perjalanan.</h3><p>Sempurnakan solusi dan siapkan presentasi finalmu.</p></div></li>
-            <li><Trophy size={28} weight="duotone" /><div><span className="pixel-label">L4 · Impact</span><h3>Rayakan dampakmu.</h3><p>Resmikan kelulusan, komitmen jangka panjang, dan dampak nyata.</p></div></li>
-          </ol>
+          <ScrollStack className="stage-scroll-stack">
+            <ScrollStackItem itemClassName="stage-card-preview">
+              <div className="stage-card-content">
+                <span className="stage-card-step">Langkah berikutnya</span>
+                <h2 className="stage-card-title">Stage 1 Discover</h2>
+                <p className="stage-card-desc">Temukan akar masalah dari pengalaman nyata.</p>
+                <span className="stage-card-pill">Misi: Observasi Masalah</span>
+              </div>
+              <div className="stage-card-map-wrap">
+                <img
+                  src="/assets/dungeon/map_stage1.png"
+                  alt="Peta Stage 1 Discover"
+                  className="stage-card-map-img"
+                  loading="lazy"
+                />
+                <div className="stage-card-map-fade" />
+              </div>
+            </ScrollStackItem>
+
+            <ScrollStackItem itemClassName="stage-card-preview">
+              <div className="stage-card-content">
+                <span className="stage-card-step">Langkah berikutnya</span>
+                <h2 className="stage-card-title">Stage 2 Build</h2>
+                <p className="stage-card-desc">Bangun dan uji prototipe dari temuan lapangan.</p>
+                <span className="stage-card-pill">Misi: Prototyping Solusi</span>
+              </div>
+              <div className="stage-card-map-wrap">
+                <img
+                  src="/assets/dungeon/map_stage2.png"
+                  alt="Peta Stage 2 Build"
+                  className="stage-card-map-img"
+                  loading="lazy"
+                />
+                <div className="stage-card-map-fade" />
+              </div>
+            </ScrollStackItem>
+
+            <ScrollStackItem itemClassName="stage-card-preview">
+              <div className="stage-card-content">
+                <span className="stage-card-step">Langkah berikutnya</span>
+                <h2 className="stage-card-title">Stage 3 Pitch</h2>
+                <p className="stage-card-desc">Uji, sempurnakan, dan siapkan presentasi final.</p>
+                <span className="stage-card-pill">Misi: Validasi &amp; Pitching</span>
+              </div>
+              <div className="stage-card-map-wrap">
+                <img
+                  src="/assets/dungeon/map_stage3.png"
+                  alt="Peta Stage 3 Pitch"
+                  className="stage-card-map-img"
+                  loading="lazy"
+                />
+                <div className="stage-card-map-fade" />
+              </div>
+            </ScrollStackItem>
+
+            <ScrollStackItem itemClassName="stage-card-preview">
+              <div className="stage-card-content">
+                <span className="stage-card-step">Langkah berikutnya</span>
+                <h2 className="stage-card-title">Stage 4 Impact</h2>
+                <p className="stage-card-desc">Rayakan dampak dan kelulusan perjalananmu di kayangan.</p>
+                <span className="stage-card-pill">Misi: Dampak Nyata</span>
+              </div>
+              <div className="stage-card-map-wrap">
+                <img
+                  src="/assets/dungeon/map_stage4.png"
+                  alt="Peta Stage 4 Impact"
+                  className="stage-card-map-img"
+                  loading="lazy"
+                />
+                <div className="stage-card-map-fade" />
+              </div>
+            </ScrollStackItem>
+          </ScrollStack>
         </div>
       </section>
 
