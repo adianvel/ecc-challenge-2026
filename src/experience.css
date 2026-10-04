@@ -553,13 +553,93 @@
   .account-layout { gap:36px; }
 }
 @media(max-width:640px) {
-  .public-nav { padding:16px 20px; gap:16px; }
+  .public-nav { padding:10px 16px; gap:12px; }
   .public-nav nav { gap:0; flex:none; }
   .public-nav nav>a:not(.entry-button) { display:none; }
-  .fq-brand>span { font-size:23px; }
-  .public-nav .entry-button { min-height:40px; padding:9px 15px; }
-  .landing-screen { min-height:unset; padding:36px 0; }
-  .landing-hero-screen { min-height:calc(100dvh - 66px); padding:0; }
+  .fq-brand>span { font-size:20px; }
+  .fq-brand>img { width:32px; height:32px; }
+  .public-nav .entry-button { min-height:36px; padding:6px 14px; font-size:14px; }
+  .landing-screen { min-height:unset; padding:32px 0; }
+
+  /* Hero Mobile Fit-to-Screen */
+  .landing-hero-screen {
+    min-height:calc(100dvh - 58px);
+    min-height:calc(100svh - 58px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:12px 0;
+    box-sizing:border-box;
+    overflow:hidden;
+  }
+  .rpg-hero-container {
+    padding:10px 14px;
+    width:100%;
+    max-width:100%;
+    box-sizing:border-box;
+  }
+  .rpg-organizers-pill {
+    padding:5px 12px;
+    margin-bottom:12px;
+    gap:8px;
+    border-width:1.5px;
+    box-shadow:2px 2px 0px rgba(11, 45, 84, 0.1);
+    max-width:calc(100vw - 28px);
+    box-sizing:border-box;
+  }
+  .rpg-organizers-logos { gap:8px; }
+  .rpg-org-logo.ecc { height:28px; width:28px; }
+  .rpg-org-logo.kemendukbangga { height:26px; max-width:135px; }
+  .rpg-org-logo.siap-impact { height:24px; max-width:72px; }
+  .rpg-org-divider { height:16px; width:1px; }
+
+  .rpg-title-group { margin-bottom:10px; width:100%; }
+  .rpg-eyebrow { font-size:11px; padding:4px 12px; margin-bottom:6px; gap:6px; }
+  .rpg-main-title {
+    font-size:clamp(32px, 9vw, 44px);
+    text-shadow:
+      2px 2px 0px #ffffff,
+      -2px -2px 0px #ffffff,
+      0 3px 0px #f26f21,
+      2px 4px 0px #0b2d54;
+  }
+  .rpg-subtitle {
+    margin:8px 0 0;
+    font-size:13.5px;
+    line-height:1.45;
+    padding:8px 14px;
+    border-width:2px;
+    box-shadow:3px 3px 0px #0b2d54;
+    max-width:100%;
+    width:100%;
+    box-sizing:border-box;
+  }
+  .rpg-subtitle::before, .rpg-subtitle::after { width:4px; height:4px; }
+
+  .rpg-menu-stack { max-width:280px; width:100%; margin-top:6px; }
+  .rpg-menu-plaque {
+    padding:10px 16px;
+    font-size:15px;
+    border-width:2px;
+    box-shadow:2.5px 2.5px 0px #0b2d54;
+  }
+  .rpg-menu-chain { height:7px; width:10px; }
+  .rpg-footer-hint {
+    margin-top:10px;
+    font-size:11px;
+    padding:5px 12px;
+    text-align:center;
+    justify-content:center;
+    max-width:calc(100vw - 32px);
+  }
+
+  /* Cloud sizing on mobile */
+  .cloud-1 { top:2%; width:220px; }
+  .cloud-2 { top:16%; width:150px; }
+  .cloud-3 { top:48%; width:120px; }
+  .cloud-4 { top:8%; width:180px; }
+  .cloud-5 { top:28%; width:140px; }
+
   .landing-hero { grid-template-columns:1fr; padding:18px 20px 36px; }
   .hero-copy { padding:0; }
   .hero-copy h1 { max-width:460px; font-size:40px; }
@@ -567,23 +647,36 @@
   .hero-landscape,.hero-landscape img { min-height:unset; height:auto; aspect-ratio:1376 / 768; }
   .hero-landscape figcaption { display:flex; }
   .stage-intro { grid-template-columns:1fr; gap:16px; }
-  .landing-stages { padding:36px 20px; }
-  .landing-route { grid-template-columns:1fr; margin-top:28px; gap:24px; }
-  .landing-route.stages-4 { grid-template-columns:1fr; margin-top:28px; gap:24px; }
-  .landing-route li { display:flex; }
-  .landing-route h3 { margin-top:8px; }
-  .landing-route p { max-width:none; }
-  .landing-invitation { display:block; padding:36px 20px; }
-  .landing-invitation .entry-button { margin-top:22px; }
-  .public-footer { padding:44px 20px 24px; }
-  .footer-main { grid-template-columns:repeat(2,minmax(0,1fr)); gap:32px 20px; }
-  .footer-about,.footer-contact { grid-column:1/-1; }
-  .footer-about p { max-width:420px; margin-top:14px; }
-  .footer-bottom { align-items:flex-start; flex-direction:column; }
-  .account-layout { display:block; padding:0 24px; margin:20px auto 40px; max-width:480px; }
+  .landing-stages { padding:32px 16px; }
+  .landing-route { grid-template-columns:1fr; margin-top:24px; gap:20px; }
+  .landing-route.stages-4 { grid-template-columns:1fr; margin-top:24px; gap:20px; }
+  .landing-route li { display:flex; padding:16px 14px; }
+  .landing-route h3 { margin-top:8px; font-size:17px; }
+  .landing-route p { max-width:none; font-size:13.5px; }
+  .landing-invitation { display:block; padding:32px 18px; }
+  .landing-invitation .entry-button { margin-top:18px; width:100%; justify-content:center; }
+  .public-footer { padding:40px 16px 20px; }
+  .footer-main { grid-template-columns:1fr; gap:28px; }
+  .footer-about,.footer-contact { grid-column:auto; }
+  .footer-about p { max-width:none; margin-top:12px; }
+  .footer-bottom { align-items:flex-start; flex-direction:column; gap:16px; }
+  .account-layout { display:block; padding:0 18px; margin:16px auto 36px; max-width:480px; }
   .account-art { display:none; }
-  .account-panel h1 { font-size:32px; }
+  .account-panel h1 { font-size:28px; }
   .experience-session { padding:6px 12px; font-size:10px; gap:8px; }
+}
+
+@media(max-width:360px) {
+  .public-nav { padding:8px 12px; }
+  .fq-brand>span { font-size:18px; }
+  .rpg-organizers-pill { padding:4px 8px; gap:6px; }
+  .rpg-organizers-logos { gap:6px; }
+  .rpg-org-logo.ecc { height:24px; width:24px; }
+  .rpg-org-logo.kemendukbangga { height:22px; max-width:110px; }
+  .rpg-org-logo.siap-impact { height:20px; max-width:60px; }
+  .rpg-main-title { font-size:30px; }
+  .rpg-subtitle { font-size:12.5px; padding:6px 10px; }
+  .rpg-menu-plaque { padding:8px 12px; font-size:14px; }
 }
 @media(max-width:680px) {
   .participant-shell .topbar-leaderboard-btn { display:none; }
