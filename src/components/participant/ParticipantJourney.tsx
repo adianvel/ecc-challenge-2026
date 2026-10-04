@@ -499,5 +499,5 @@ function lockMessage(reason: ReturnType<typeof getStageAccess>['reason']) {
 }
 
 function ControlsGuide() {
-  return <div className="controls-guide"><div><kbd>W A S D</kbd><span>atau tombol panah untuk bergerak</span></div><div><kbd>E</kbd><span>interaksi di dekat monster atau penanda misi</span></div><div><kbd>Esc</kbd><span>jeda dan lanjutkan permainan</span></div><p>Di ponsel: gunakan joystick di tengah bawah dan tombol interaksi di kanan. Mainkan dalam posisi lanskap.</p></div>;
+  return <div className="controls-guide"><div><kbd>W A S D</kbd><span>atau tombol panah untuk bergerak</span></div><div><kbd>E</kbd><span>interaksi di dekat monster atau penanda misi</span></div><div><kbd>Esc</kbd><span>jeda dan lanjutkan permainan</span></div><p>Di ponsel, gunakan analog di bawah dan tombol interaksi di kanan.</p></div>;
 }
