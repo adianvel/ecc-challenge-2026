@@ -552,6 +552,15 @@
   .footer-main { grid-template-columns:repeat(2,minmax(0,1fr)); gap:40px; }
   .account-layout { gap:36px; }
 }
+
+@media(max-width:768px) {
+  .rpg-hero-bg-layer {
+    background-image: url('/assets/landing/hero_rpg_bg_mobile.jpg');
+    background-size: cover;
+    background-position: center bottom;
+  }
+}
+
 @media(max-width:640px) {
   .public-nav { padding:10px 16px; gap:12px; }
   .public-nav nav { gap:0; flex:none; }
@@ -571,6 +580,11 @@
     padding:12px 0;
     box-sizing:border-box;
     overflow:hidden;
+  }
+  .rpg-hero-bg-layer {
+    background-image: url('/assets/landing/hero_rpg_bg_mobile.jpg');
+    background-size: cover;
+    background-position: center bottom;
   }
   .rpg-hero-container {
     padding:10px 14px;
