@@ -108,7 +108,7 @@ export function RpgHeroSection({ isLoggedIn }: RpgHeroSectionProps) {
           </span>
           <h1 className="rpg-main-title">Future Quest</h1>
           <p className="rpg-subtitle">
-            Petualangan belajar interaktif RPG. Temukan masalah, bangun prototipe solusi, dan jelajahi dampakmu.
+            Perjalanan belajar yang bisa kamu jelajahi. Temukan masalah, bangun prototipe solusi, dan jelajahi dampakmu.
           </p>
         </div>
 
