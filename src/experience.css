@@ -154,8 +154,8 @@
 }
 @media(max-width:640px) {
   .public-nav { padding:16px 20px; gap:16px; }
-  .public-nav nav { gap:12px; }
-  .public-nav nav>a:first-child { display:none; }
+  .public-nav nav { gap:0; flex:none; }
+  .public-nav nav>a:not(.entry-button) { display:none; }
   .fq-brand>span { font-size:23px; }
   .public-nav .entry-button { min-height:40px; padding:9px 15px; }
   .landing-screen { min-height:unset; padding:36px 0; }
@@ -184,6 +184,16 @@
   .account-art { display:none; }
   .account-panel h1 { font-size:32px; }
   .experience-session { padding:6px 12px; font-size:10px; gap:8px; }
+}
+@media(max-width:680px) {
+  .participant-shell .topbar-leaderboard-btn { display:none; }
+  .participant-shell .brand-copy { flex:none; min-width:120px; }
+  .participant-shell .brand-copy :is(span,strong) { white-space:nowrap; }
+}
+@media(max-width:360px) {
+  .participant-shell .participant-topbar { gap:6px; padding-inline:10px; }
+  .participant-shell .brand-copy { min-width:90px; }
+  .participant-shell .brand-copy span { display:none; }
 }
 @media(prefers-reduced-motion:reduce) { .public-experience * { transition:none!important; scroll-behavior:auto!important; } }
 /* ECC orange leads actions and selection; navy keeps text readable. */
@@ -374,6 +384,11 @@ kbd { display:inline-block; font:600 12px/1.3 'Geist',sans-serif; padding:3px 6p
 .controls-guide>div { display:flex; align-items:center; gap:12px; }
 .controls-guide kbd { min-width:78px; text-align:center; padding:7px; font-size:13px; }
 .controls-guide p { color:#3b4f6d; font-size:14px; margin:4px 0 0; }
+@media(max-width:680px) {
+  .controls-guide { margin-top:16px; padding-top:14px; }
+  .controls-guide>div { display:none; }
+  .controls-guide p { margin:0; }
+}
 .stage-first-step { display:flex; gap:14px; padding:16px; background:#f4f5f8; color:#0b2d54; border-radius:6px; margin-top:24px; }
 .stage-first-step svg { flex:none; margin-top:2px; }
 .stage-first-step p { margin:5px 0 0; font-size:14px; }
