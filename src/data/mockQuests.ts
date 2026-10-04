@@ -155,7 +155,7 @@ export const STAGE_QUIZZES: QuizQuestion[] = [
     id: 'quiz-s2-e1',
     stageOrdinal: 2,
     enemyId: 'enemy-s2-1',
-    enemyName: 'Ideation Sentry',
+    enemyName: 'Naga Penjaga Ide',
     title: 'Divergensi Ide & Problem Statement HMW',
     scenario: 'Setelah menganalisis sintesis empati, tim Anda merumuskan "How Might We (HMW)" untuk menjawab kesenjangan keterampilan kerja pada lulusan baru.',
     question: 'Karakteristik formula HMW yang efektif untuk memicu ideasi bermutu tinggi adalah:',

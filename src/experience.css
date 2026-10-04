@@ -327,10 +327,19 @@ kbd { display:inline-block; font:600 12px/1.3 'Geist',sans-serif; padding:3px 6p
 .quiz-battle.is-counterattack .quiz-enemy { transform:translateX(65px) scale(1.1); }
 .quiz-battle:is(.is-victory,.is-counterattack) .quiz-battle-result { animation:quiz-result .65s ease-out both; }
 .quiz-battle.is-defeated .quiz-enemy { transform:scale(.85); filter:grayscale(1); }
+.quiz-victory-burst { position:absolute; z-index:3; left:50%; top:45%; display:grid; place-items:center; width:190px; height:140px; transform:translate(-50%,-50%); pointer-events:none; isolation:isolate; }
+.quiz-victory-burst::before { content:''; position:absolute; z-index:-1; width:170px; height:170px; border-radius:50%; background:repeating-conic-gradient(from 8deg,#ffd166dd 0deg 9deg,transparent 9deg 22deg); animation:quiz-victory-rays .8s cubic-bezier(.23,1,.32,1) both; }
+.quiz-victory-burst::after { content:''; position:absolute; z-index:-1; width:105px; height:105px; border:5px solid #fff4b3; border-radius:50%; box-shadow:0 0 0 8px #f26f2155,0 0 28px #ffd166; animation:quiz-victory-ring .8s cubic-bezier(.23,1,.32,1) both; }
+.quiz-victory-burst strong { padding:7px 12px; border:2px solid #ffe4a0; border-radius:4px; background:#0b2d54ed; color:#fff4b3; font:700 14px/1.2 'Geist',sans-serif; letter-spacing:.06em; text-align:center; text-shadow:0 2px 5px #000; box-shadow:0 4px 18px #07131fbb; animation:quiz-victory-title .5s cubic-bezier(.23,1,.32,1) both; }
+.quiz-battle.is-boss .quiz-victory-burst::before { width:220px; height:220px; }
+.quiz-battle.is-boss .quiz-victory-burst strong { color:#ffd166; font-size:16px; }
+@keyframes quiz-victory-rays { from { opacity:0; transform:scale(.25) rotate(-25deg); } 55% { opacity:1; } to { opacity:.6; transform:scale(1) rotate(12deg); } }
+@keyframes quiz-victory-ring { from { opacity:0; transform:scale(.25); } 45% { opacity:1; } to { opacity:.7; transform:scale(1.3); } }
+@keyframes quiz-victory-title { from { opacity:0; transform:translateY(14px) scale(.7); } to { opacity:1; transform:translateY(0) scale(1); } }
 @keyframes quiz-result { 45% { opacity:1; transform:translate(-50%,-50%) scale(1.1); } 100% { opacity:0; transform:translate(-50%,-65%) scale(1); } }
 @keyframes quiz-slash { 0%,25% { opacity:0; scale:.5; } 50% { opacity:1; scale:1; } 100% { opacity:0; scale:1.2; } }
 @media(max-width:480px) { .quiz-battle { padding-inline:6px; min-height:156px; } .quiz-combatant { width:105px; } .quiz-battle.is-victory .quiz-hero { transform:translateX(-25px) scale(1.06); } .quiz-battle.is-counterattack .quiz-enemy { transform:translateX(25px) scale(1.06); } }
-@media(prefers-reduced-motion:reduce) { .quiz-battle *, .quiz-battle-result { animation:none!important; transition:none!important; } .quiz-battle:is(.is-victory,.is-counterattack) .quiz-battle-result { opacity:1; } }
+@media(prefers-reduced-motion:reduce) { .quiz-battle *, .quiz-battle-result { animation:none!important; transition:none!important; } .quiz-battle:is(.is-victory,.is-counterattack) .quiz-battle-result { opacity:1; } .quiz-victory-burst::before,.quiz-victory-burst::after { animation:none; } }
 .journey-dialog .quiz-option { border-color:#dce2ea; background:#fff; color:#0b2d54; font-size:14px; padding:14px; border-radius:6px; }
 .journey-dialog .quiz-option:hover:not(:disabled) { background:#f4f5f8; border-color:#f26f21; }
 .journey-dialog .quiz-option.is-selected { background:#f4f5f8; border-color:#f26f21; }
@@ -381,6 +390,7 @@ kbd { display:inline-block; font:600 12px/1.3 'Geist',sans-serif; padding:3px 6p
 .participant-shell .stick-ring { border-color:#f26f2180; }
 .participant-shell .stick-knob { border-color:#ffab73; background:#f26f21; }
 .participant-shell .stick-caption { color:#fff; }
+@media (min-width:901px) and (hover:hover) and (pointer:fine) { .participant-shell .virtual-stick { display:none; } }
 .participant-shell .orientation-note { display:none; max-width:none; width:100%; text-align:left; border:0; font-size:15px; position:absolute; inset:0; z-index:10; padding:36px 28px; background:#f4f5f8; color:#0b2d54; align-content:center; }
 .participant-shell .orientation-note strong { font-size:24px; line-height:1.3; }
 .participant-shell .orientation-note p { color:#3b4f6d; font-size:15px; line-height:1.7; }

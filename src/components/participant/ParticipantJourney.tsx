@@ -48,6 +48,7 @@ export function ParticipantJourney({
   const openPause = useCallback(() => setPauseOpen(true), []);
   const closePause = () => { setPauseOpen(false); setPausePassportOpen(false); };
   const [activeQuiz, setActiveQuiz] = useState<(typeof STAGE_QUIZZES)[number] | null>(null);
+  const [victoryEvent, setVictoryEvent] = useState<{ quizId: string; serial: number } | null>(null);
   const [activeMission, setActiveMission] = useState<(typeof STAGE_BOSS_MISSIONS)[number] | null>(null);
   const totalXp = useMemo(() => Object.values(demo.xpAwards).reduce((sum, amount) => sum + amount, 0), [demo.xpAwards]);
   const activeStage = PARTICIPANT_STAGES.find(stage => stage.ordinal === demo.currentStage) || PARTICIPANT_STAGES[0];
@@ -162,6 +163,7 @@ export function ParticipantJourney({
               stage={activeStage} 
               paused={introOpen || pauseOpen || Boolean(activeQuiz) || Boolean(activeMission) || isLeaderboardOpen}
               quizDefeats={demo.quizDefeats}
+              victoryEvent={victoryEvent}
               onOpenQuiz={openQuiz}
               onPause={openPause} 
               onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
@@ -195,6 +197,7 @@ export function ParticipantJourney({
               onClose={() => setActiveQuiz(null)}
               onSubmit={markQuizAttempt}
               onCorrect={markQuizDefeat}
+              onVictoryClose={quizId => setVictoryEvent(current => ({ quizId, serial: (current?.serial || 0) + 1 }))}
             />
             <BossMissionModal
               key={activeMission?.id || 'no-mission'}
@@ -496,5 +499,5 @@ function lockMessage(reason: ReturnType<typeof getStageAccess>['reason']) {
 }
 
 function ControlsGuide() {
-  return <div className="controls-guide"><div><kbd>W A S D</kbd><span>atau tombol panah untuk bergerak</span></div><div><kbd>E</kbd><span>interaksi di dekat monster atau penanda misi</span></div><div><kbd>Esc</kbd><span>jeda dan lanjutkan permainan</span></div><p>Di ponsel: gunakan joystick di kiri dan tombol interaksi di kanan. Mainkan dalam posisi lanskap.</p></div>;
+  return <div className="controls-guide"><div><kbd>W A S D</kbd><span>atau tombol panah untuk bergerak</span></div><div><kbd>E</kbd><span>interaksi di dekat monster atau penanda misi</span></div><div><kbd>Esc</kbd><span>jeda dan lanjutkan permainan</span></div><p>Di ponsel: gunakan joystick di tengah bawah dan tombol interaksi di kanan. Mainkan dalam posisi lanskap.</p></div>;
 }

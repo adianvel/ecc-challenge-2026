@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import confetti from 'canvas-confetti';
 import { L3_BRIDGE, TREE_BASES, movePlayer, touchesTerrain } from './terrain';
 import type { ParticipantStage } from '../data/participantStages';
 import { STAGE_QUIZZES } from '../data/mockQuests';
@@ -20,7 +21,6 @@ export class ArenaScene extends Phaser.Scene {
   private mapHeight = MAP_SIZE;
   private nearbyEncounter: StageEncounter | null = null;
   private monsterSprites: { monster: StageMonster; sprite: Phaser.GameObjects.Image }[] = [];
-  private bossShield: Phaser.GameObjects.Arc | null = null;
   private isKnockedBack = false;
   private lastKnockbackTime = 0;
   private facing: Facing = 'down';
@@ -74,10 +74,6 @@ export class ArenaScene extends Phaser.Scene {
 
     const defeats = this.readDefeats();
     const bossUnlocked = STAGE_MONSTERS[this.stage.ordinal].slice(0, 2).every(monster => defeats.includes(monster.quizId));
-
-    if (this.bossShield) {
-      this.bossShield.setVisible(!bossUnlocked);
-    }
 
     // Check boss barrier knockback trigger if player approaches locked boss
     const bossEntry = this.monsterSprites.find(({ monster }) => monster.boss);
@@ -193,34 +189,59 @@ export class ArenaScene extends Phaser.Scene {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     STAGE_MONSTERS[this.stage.ordinal].forEach((monster, index) => {
       const source = this.textures.get(monster.art).getSourceImage() as HTMLImageElement;
-      const height = monster.boss ? 110 : 82;
-      const width = Math.min(monster.boss ? 210 : 100, height * source.width / source.height);
-      this.add.ellipse(monster.x, monster.y - 3, width * 0.7, 16, 0x0b2d54, 0.3).setDepth(monster.y - 2);
-
-      // Visual pulsing barrier aura for boss
-      if (monster.boss) {
-        const shield = this.add.circle(monster.x, monster.y - 35, 52);
-        shield.setStrokeStyle(3, 0xff3b30, 0.85);
-        shield.setFillStyle(0xff3b30, 0.12);
-        shield.setDepth(monster.y - 1);
-        if (!reducedMotion) {
-          this.tweens.add({
-            targets: shield,
-            scale: 1.15,
-            alpha: 0.35,
-            duration: 850,
-            yoyo: true,
-            repeat: -1,
-            ease: 'Sine.easeInOut'
-          });
-        }
-        this.bossShield = shield;
-      }
+      const height = monster.boss ? 110 : monster.art === 'enemy040' ? 140 : monster.art === 'enemy044f' ? 120 : 82;
+      const width = Math.min(monster.boss ? 210 : monster.art === 'enemy040' ? 150 : monster.art === 'enemy044f' ? 130 : 100, height * source.width / source.height);
+      this.add.ellipse(monster.x, monster.y - 4, monster.boss ? 148 : 94, monster.boss ? 42 : 30, 0xff3b30, 0.18)
+        .setStrokeStyle(4, 0xff3b30, 0.95)
+        .setDepth(monster.y - 2);
 
       const sprite = this.add.image(monster.x, monster.y, monster.art).setOrigin(0.5, 1).setDisplaySize(width, height).setDepth(monster.y);
       this.monsterSprites.push({ monster, sprite });
       if (!reducedMotion) this.tweens.add({ targets: sprite, y: monster.y - 4, duration: 1500 + index * 180, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     });
+  }
+
+  celebrateQuiz(quizId: string) {
+    const monster = STAGE_MONSTERS[this.stage.ordinal].find(item => item.quizId === quizId);
+    if (!monster) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const x = monster.x;
+    const y = monster.y - (monster.boss ? 45 : 32);
+    const camera = this.cameras.main;
+    const bounds = this.game.canvas.getBoundingClientRect();
+    const origin = {
+      x: (bounds.left + (x - camera.worldView.x) / camera.worldView.width * bounds.width) / window.innerWidth,
+      y: (bounds.top + (y - camera.worldView.y) / camera.worldView.height * bounds.height) / window.innerHeight,
+    };
+    confetti({
+      particleCount: monster.boss ? 150 : 95,
+      spread: monster.boss ? 70 : 55,
+      startVelocity: monster.boss ? 30 : 23,
+      ticks: 110,
+      gravity: 1.3,
+      scalar: 0.8,
+      origin,
+      colors: ['#f26f21', '#ffd166', '#ffffff', '#2e8b74'],
+    });
+    const count = monster.boss ? 32 : 20;
+    const colors = [0xf26f21, 0xffd166, 0xffffff, 0x2e8b74];
+    const ring = this.add.circle(x, y, 22).setStrokeStyle(5, 0xffd166).setDepth(monster.y + 8);
+    this.tweens.add({ targets: ring, scale: monster.boss ? 4 : 3, alpha: 0, duration: 700, ease: 'Cubic.easeOut', onComplete: () => ring.destroy() });
+    for (let index = 0; index < count; index++) {
+      const angle = index * Math.PI * 2 / count;
+      const distance = (monster.boss ? 95 : 65) * (0.7 + (index % 4) * 0.1);
+      const spark = this.add.rectangle(x, y, index % 3 === 0 ? 9 : 6, index % 3 === 0 ? 9 : 6, colors[index % colors.length]).setDepth(monster.y + 9);
+      this.tweens.add({
+        targets: spark,
+        x: x + Math.cos(angle) * distance,
+        y: y + Math.sin(angle) * distance + 16,
+        angle: 180 + index * 23,
+        alpha: 0,
+        duration: monster.boss ? 950 : 750,
+        ease: 'Cubic.easeOut',
+        onComplete: () => spark.destroy(),
+      });
+    }
   }
 
   private triggerBossBarrierRepel(monster: StageMonster) {
@@ -281,8 +302,15 @@ export class ArenaScene extends Phaser.Scene {
     // 5. Knockback physics (rebounding player backwards away from boss)
     const angle = Phaser.Math.Angle.Between(monster.x, monster.y, this.player.x, this.player.y);
     const pushDist = 120;
-    const targetX = Phaser.Math.Clamp(this.player.x + Math.cos(angle) * pushDist, 30, this.stage.worldSize - 30);
-    const targetY = Phaser.Math.Clamp(this.player.y + Math.sin(angle) * pushDist, 30, this.stage.worldSize - 30);
+    let targetX = this.player.x;
+    let targetY = this.player.y;
+    for (let distance = 8; distance <= pushDist; distance += 8) {
+      const x = Phaser.Math.Clamp(this.player.x + Math.cos(angle) * distance, 30, this.stage.worldSize - 30);
+      const y = Phaser.Math.Clamp(this.player.y + Math.sin(angle) * distance, 30, this.stage.worldSize - 30);
+      if (touchesTerrain(this.stage.ordinal, this.stage.mapScale, { x, y }, this.mapPixels, this.mapWidth, this.mapHeight)) break;
+      targetX = x;
+      targetY = y;
+    }
 
     this.isKnockedBack = true;
     this.player.anims.play(`hero-${this.facing}-idle`, true);
@@ -291,7 +319,7 @@ export class ArenaScene extends Phaser.Scene {
       x: targetX,
       y: targetY,
       duration: 280,
-      ease: 'Back.easeOut',
+      ease: 'Cubic.easeOut',
       onUpdate: () => {
         if (this.player && this.shadow) {
           this.shadow.setPosition(this.player.x, this.player.y - 4);

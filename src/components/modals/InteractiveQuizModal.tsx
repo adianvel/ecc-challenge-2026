@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import confetti from 'canvas-confetti';
 import { CheckCircle, Circle, XCircle } from '@phosphor-icons/react';
 import type { PathCode, QuizQuestion, HeroGender } from '../../types';
 import { JourneyDialog } from '../ui/JourneyDialog';
@@ -19,6 +18,7 @@ export function InteractiveQuizModal({
   onClose,
   onSubmit,
   onCorrect,
+  onVictoryClose,
 }: {
   quiz: QuizQuestion | null;
   currentPath?: PathCode;
@@ -29,6 +29,7 @@ export function InteractiveQuizModal({
   onClose: () => void;
   onSubmit: (quizId: string) => void;
   onCorrect: (quizId: string) => void;
+  onVictoryClose: (quizId: string) => void;
 }) {
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -43,8 +44,6 @@ export function InteractiveQuizModal({
       const correct = quiz?.options.find(option => option.id === selectedOptionId)?.isCorrect;
       if (!correct) {
         setPlayerHp(hp => Math.max(15, hp - 25));
-      } else if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        confetti({ particleCount: 70, spread: 60, origin: { y: 0.4 } });
       }
       setBattlePhase('result');
       setSubmitted(true);
@@ -56,6 +55,10 @@ export function InteractiveQuizModal({
   const stage = PARTICIPANT_STAGES.find(item => item.ordinal === quiz.stageOrdinal);
   const monster = STAGE_MONSTERS[quiz.stageOrdinal as StageOrdinal].find(item => item.quizId === quiz.id);
   const selected = quiz.options.find(option => option.id === selectedOptionId);
+  const closeQuiz = () => {
+    if (battlePhase === 'result' && selected?.isCorrect) onVictoryClose(quiz.id);
+    onClose();
+  };
   const submitAnswer = () => {
     if (!selected || readOnly) return;
     if (battlePhase === 'attack') return;
@@ -66,16 +69,17 @@ export function InteractiveQuizModal({
   };
 
   return (
-    <JourneyDialog titleId="quiz-title" className="quiz-dialog" onClose={onClose}>
+    <JourneyDialog titleId="quiz-title" className="quiz-dialog" onClose={closeQuiz}>
         <header className="dialog-heading">
           <div><span className="eyebrow">L{quiz.stageOrdinal} · QUIZ <i>DEMO</i></span><h2 id="quiz-title">{quiz.title}</h2></div>
-          <button className="icon-button" onClick={onClose} aria-label="Tutup kuis"><XCircle size={22} /></button>
+          <button className="icon-button" onClick={closeQuiz} aria-label="Tutup kuis"><XCircle size={22} /></button>
         </header>
         <p className="dialog-context"><strong>{trackLabel(currentPath)}:</strong> {trackFocus}</p>
-        {!readOnly && <div className={`quiz-battle ${battlePhase === 'attack' ? selected?.isCorrect ? 'is-victory' : 'is-counterattack' : ''} ${battlePhase === 'result' && selected?.isCorrect ? 'is-defeated' : ''}`} style={{ backgroundImage: stage ? `linear-gradient(180deg,rgba(8,31,61,.24),rgba(8,31,61,.62)),url('${stage.mapPath}')` : undefined, borderColor: stage?.accent }} aria-label={`Adegan kuis: karakter melawan ${quiz.enemyName}`}>
+        {!readOnly && <div className={`quiz-battle ${battlePhase === 'attack' ? selected?.isCorrect ? 'is-victory' : 'is-counterattack' : ''} ${battlePhase === 'result' && selected?.isCorrect ? 'is-defeated' : ''} ${monster?.boss ? 'is-boss' : ''}`} style={{ backgroundImage: stage ? `linear-gradient(180deg,rgba(8,31,61,.24),rgba(8,31,61,.62)),url('${stage.mapPath}')` : undefined, borderColor: stage?.accent }} aria-label={`Adegan kuis: karakter melawan ${quiz.enemyName}`}>
           <div className="quiz-combatant quiz-enemy"><span>{quiz.enemyName}</span><div className="quiz-health"><i style={{ width: battlePhase === 'result' && selected?.isCorrect ? '0%' : '100%' }} /></div>{monster && <img className={`quiz-monster-art${monster.boss ? ' is-boss' : ''}`} src={monsterArtPath(monster.art)} alt="" />}</div>
           <strong className="quiz-battle-result" aria-hidden="true">{selected?.isCorrect ? 'Tepat!' : 'Coba lagi!'}</strong>
           {battlePhase === 'attack' && selected?.isCorrect && <span className="quiz-battle-slash" aria-hidden="true" />}
+          {battlePhase === 'result' && selected?.isCorrect && <div className="quiz-victory-burst" aria-hidden="true"><strong>{monster?.boss ? 'BOSS DIKALAHKAN!' : 'MONSTER DIKALAHKAN!'}</strong></div>}
           <div className="quiz-combatant quiz-hero"><span>{heroCfg.characterName}</span><div className="quiz-health"><i style={{ width: `${playerHp}%` }} /></div><HeroBattleSprite pathCode={currentPath} gender={gender} actionState={battlePhase === 'attack' && selected?.isCorrect ? 'attack' : battlePhase === 'attack' ? 'hit' : battlePhase === 'result' && selected?.isCorrect ? 'victory' : 'idle'} size={110} /></div>
           <div className="quiz-battle-caption" role="status">{battlePhase === 'idle' ? 'Pilih jawaban untuk memulai' : battlePhase === 'attack' ? selected?.isCorrect ? 'Serangan tepat!' : 'Musuh menyerang balik!' : selected?.isCorrect ? 'Musuh berhasil dikalahkan' : 'Pilih jawaban lain untuk mencoba lagi'}</div>
         </div>}
@@ -114,11 +118,11 @@ export function InteractiveQuizModal({
         <footer className="dialog-actions">
           <span className="demo-note">{readOnly ? 'Mode lihat · tidak ada XP baru · DEMO' : 'XP hanya untuk percobaan pertama · DEMO'}</span>
           <div>
-            <button className="button button-quiet" onClick={onClose}>{submitted ? 'Selesai' : 'Kembali'}</button>
-            {readOnly ? <button className="button button-gold" onClick={onClose}>Tutup tampilan</button> : !submitted ? (
+            <button className="button button-quiet" onClick={closeQuiz}>{submitted ? 'Selesai' : 'Kembali'}</button>
+            {readOnly ? <button className="button button-gold" onClick={closeQuiz}>Tutup tampilan</button> : !submitted ? (
               <button className="button button-gold" onClick={submitAnswer} disabled={!selected || battlePhase === 'attack'}>{battlePhase === 'attack' ? 'Menilai jawaban…' : 'Jawab / serang'} {!alreadyAttempted && !earnedXp && <span>+10 XP</span>}</button>
             ) : selected?.isCorrect ? (
-              <button className="button button-gold" onClick={onClose}>Lanjutkan</button>
+              <button className="button button-gold" onClick={closeQuiz}>Lanjutkan</button>
             ) : (
               <button className="button button-gold" onClick={() => { setSubmitted(false); setSelectedOptionId(null); setBattlePhase('idle'); }}>Coba jawaban lain <span>tanpa XP ulang</span></button>
             )}

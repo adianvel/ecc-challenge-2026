@@ -7,17 +7,19 @@ import type { StageEncounter } from '../game/arena-scene';
 
 type Movement = { x: number; y: number };
 
-export function GameWorld({ stage, paused, quizDefeats, onOpenQuiz, onPause, onOpenLeaderboard, heroSpritesheetUrl }: {
+export function GameWorld({ stage, paused, quizDefeats, victoryEvent, onOpenQuiz, onPause, onOpenLeaderboard, heroSpritesheetUrl }: {
   stage: ParticipantStage;
   paused: boolean;
   quizDefeats: readonly string[];
+  victoryEvent: { quizId: string; serial: number } | null;
   onOpenQuiz: (quizId: string) => void;
   onPause: () => void;
   onOpenLeaderboard?: () => void;
   heroSpritesheetUrl?: string;
 }) {
   const mountRef = useRef<HTMLDivElement>(null);
-  const sceneRef = useRef<{ interact: () => void } | null>(null);
+  const sceneRef = useRef<{ interact: () => void; celebrateQuiz: (quizId: string) => void } | null>(null);
+  const celebratedSerial = useRef(0);
   const [portrait, setPortrait] = useState(() => matchMedia('(pointer:coarse) and (orientation:portrait)').matches);
   useEffect(() => { const media=matchMedia('(pointer:coarse) and (orientation:portrait)');const change=()=>setPortrait(media.matches);media.addEventListener('change',change);return()=>media.removeEventListener('change',change); }, []);
   const pausedRef = useRef(paused);
@@ -91,6 +93,13 @@ export function GameWorld({ stage, paused, quizDefeats, onOpenQuiz, onPause, onO
       sceneRef.current = null;
     };
   }, [stage, onOpenQuiz, heroSpritesheetUrl]);
+
+  useEffect(() => {
+    if (!paused && gameReady && victoryEvent && victoryEvent.serial !== celebratedSerial.current) {
+      celebratedSerial.current = victoryEvent.serial;
+      sceneRef.current?.celebrateQuiz(victoryEvent.quizId);
+    }
+  }, [paused, gameReady, victoryEvent]);
 
   useEffect(() => {
     const pressed = new Set<string>();
